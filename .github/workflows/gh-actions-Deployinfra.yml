@@ -31,9 +31,9 @@ jobs:
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           az account show --output table
           
-          az group create --name ${{ secrets.DEVRESOURCEGROUP }} --location ${{ secrets.LOCATION }} --tags LabInstance=${{ secrets.LABINSTANCEID }}
+          az group create --name ${{ secrets.DEVRESOURCEGROUP }} --location ${{ secrets.LOCATION }} --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}" --tags LabInstance=${{ secrets.LABINSTANCEID }}
 
-          az group create --name ${{ secrets.PRODRESOURCEGROUP }} --location ${{ secrets.LOCATION }} --tags LabInstance=${{ secrets.LABINSTANCEID }}
+          az group create --name ${{ secrets.PRODRESOURCEGROUP }} --location ${{ secrets.LOCATION }} --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}" --tags LabInstance=${{ secrets.LABINSTANCEID }}
         azcliversion: latest
 
     - uses: azure/cli@v1.0.0
@@ -58,5 +58,5 @@ jobs:
       with:
         inlineScript: |
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          az deployment group create --resource-group ${{ secrets.PRODRESOURCEGROUP }} --name deployinfraprod --template-file ARM-DevSecOps-Prod.json
+          az deployment group create --resource-group ${{ secrets.PRODRESOURCEGROUP }} --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}" --name deployinfraprod --template-file ARM-DevSecOps-Prod.json
         azcliversion: latest
